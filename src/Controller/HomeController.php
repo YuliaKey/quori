@@ -13,6 +13,7 @@ class HomeController extends AbstractController
     {
         $questions = [
             [
+                'id' => 1,
                 'title' => 'Je suis une question',
                 'content' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid quos qui debitis iste cumque, libero quasi vero suscipit accusantium quia omnis, eligendi amet quas dolore quis odio possimus vel quisquam iure itaque rem magni minima veritatis aliquam? Sequi, provident. Odit perspiciatis expedita dolor adipisci tempore dignissimos maiores quaerat laboriosam minus?',
                 'rating' => 20,
@@ -23,6 +24,7 @@ class HomeController extends AbstractController
                 'nbResponse' => 15
             ],
             [
+                'id' => 2,
                 'title'=> 'je suis une question',
                 'content'=> 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officiis, quis odit! Odit earum quisquam ea animi in qui sit quia. Consequatur illum voluptas quidem, sed et                        numquam neque aspernatur quibusdam.',
                 'rating'=> 0,
