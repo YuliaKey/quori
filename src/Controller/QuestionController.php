@@ -18,7 +18,7 @@ class QuestionController extends AbstractController
     {
         $question = new Question();
 
-        $formQuestion = $this->createForm(QuestionType::class);
+        $formQuestion = $this->createForm(QuestionType::class, $question);
         $formQuestion->handleRequest($request);
 
         if($formQuestion->isSubmitted() && $formQuestion->isValid()){
@@ -40,19 +40,8 @@ class QuestionController extends AbstractController
     }
 
     #[Route('/question/{id}', name: 'show_question')]
-    public function show(Request $request, string $id) {
-        $question = [
+    public function show(Request $request, Question $question) {
 
-                'id' => 1,
-                'title' => 'Je suis une question',
-                'content' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid quos qui debitis iste cumque, libero quasi vero suscipit accusantium quia omnis, eligendi amet quas dolore quis odio possimus vel quisquam iure itaque rem magni minima veritatis aliquam? Sequi, provident. Odit perspiciatis expedita dolor adipisci tempore dignissimos maiores quaerat laboriosam minus?',
-                'rating' => 20,
-                'author' => [
-                    'name' => 'Jean Dupont',
-                    'avatar' => 'https://randomuser.me/api/portraits/men/20.jpg'
-                ],
-                'nbResponse' => 15
-            ];
         return $this->render('question/show.html.twig', ['question' => $question]);
     }
 }
