@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
@@ -30,14 +31,20 @@ class SecurityController extends AbstractController
 
             return $this->redirectToRoute('signin');
         }
-        
+
         return $this->render('security/signup.html.twig',['form' => $signupForm->createView()]);
     }
 
     #[Route('/signin', name: 'signin')]
-    public function signin(): Response
+    public function signin(AuthenticationUtils $authentificationUtils): Response
     {
-        return $this->render('security/signin.html.twig');
+        if($this->getUser()) {
+            return $this->redirectToRoute('home');
+        }
+        $error = $authentificationUtils->getLastAuthenticationError();
+        $username = $authentificationUtils->getLastUsername();
+
+        return $this->render('security/signin.html.twig', ['username' => $username, 'error' => $error]);
     }
 
     #[Route('/logout', name: 'logout')]
