@@ -25,7 +25,7 @@
             <input type="hidden" name="_csrf_token" value="{{csrf_token('authenticate')}}">
             {% if error %}
                 <ul class="form-errors pb-20">
-                    <li>{{ error.mesageKey | trans(error.messagefata, 'security')}}</li>
+                    <li>{{ error.messageKey | trans(error.messagefata, 'security')}}</li>
                 </ul>
             {% endif %}
             <button class="btn btn-primary mr-10">Se connecter</button>
