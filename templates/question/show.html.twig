@@ -43,7 +43,7 @@
 
         {% for comment in question.comments %}
             <div class="question-response-elem d-flex flex-row-nowrap mb-20">
-                {% include "./partials/_rating.html.twig" with {rating: comment.rating, from: 'comment', id: 'comment.id'} %}
+                {% include "./partials/_rating.html.twig" with {rating: comment.rating, from: 'comment', id: comment.id} %}
                 <div class="d-flex flex-column w-100">
                     <div class="d-flex flex-row-nowrap align-items-center pb-10">
                         <a class="d-flex flex-row-nowrap align-items-center" href="{{path('profile_user', {id: comment.author.id})}}">
