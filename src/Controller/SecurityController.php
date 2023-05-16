@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\ResetPasswordRepository;
 use App\Repository\UserRepository;
+use App\Services\UploadImageService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -34,7 +35,7 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/signup', name: 'signup')]
-    public function signup(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em, UserAuthenticatorInterface $userAuthenticator, MailerInterface $mailer): Response
+    public function signup(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em, UserAuthenticatorInterface $userAuthenticator, MailerInterface $mailer, UploadImageService $uploaderPicture): Response
     {
 
         $user = new User();
@@ -47,11 +48,8 @@ class SecurityController extends AbstractController
 
             $picture = $signupForm->get('pictureFile')->getData();
            if($picture) {
-            $folder = $this->getParameter('profile.folder');
-            $extension = $picture->guessExtension() ?? 'bin';
-            $filename = bin2hex(random_bytes(10)) . "." . $extension; // avatar.png => audyqiwdbhdsa.png
-            $picture->move($folder, $filename);
-            $user->setImage($this->getParameter('profile.folder.public_path'). "/" . $filename); // /profiles/asfouejfwbsdad.png
+            
+            $user->setImage($uploaderPicture->uploadProfileImage($picture));
            } else {
             $user->setImage("/images/default-profile.jpeg");
            }

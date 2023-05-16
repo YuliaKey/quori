@@ -22,7 +22,7 @@ class UserType extends AbstractType
             ->add('email', EmailType::class, ['label' => 'Email', 'required' => false])
             ->add('password', PasswordType::class, ['label' => 'Mot de passe *', 'required' => false])
             ->add('pictureFile', FileType::class, [
-                'label' => 'Image de progil', 
+                'label' => 'Image de profil', 
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
