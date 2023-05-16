@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
@@ -81,7 +82,9 @@ class SecurityController extends AbstractController
     public function logout() {}
 
     #[Route('/reset-password-request', name: 'reset-password-request')]
-    public function resetPasswordRequest(Request $request, UserRepository $userRepository, EntityManagerInterface $em, ResetPasswordRepository $resetPasswordRepository, MailerInterface $mailer) {
+    public function resetPasswordRequest(Request $request, UserRepository $userRepository, EntityManagerInterface $em, ResetPasswordRepository $resetPasswordRepository, MailerInterface $mailer, RateLimiterFactory $passwordRecoveryLimiter) {
+
+        
 
         $emailForm = $this->createFormBuilder()
                             ->add('email', EmailType::class, [
@@ -99,6 +102,12 @@ class SecurityController extends AbstractController
         $emailForm->handleRequest($request);
 
         if ($emailForm->isSubmitted() && $emailForm->isValid()){
+            $limiter = $passwordRecoveryLimiter->create($request->getClientIp());
+            if(!$limiter->consume(1)->isAccepted()) {
+                $this->addFlash('error', 'Vous devez attendre 1 heure pour refaire une demande');
+
+                return $this->redirectToRoute('signin');
+            }
             $email = $emailForm->get('email')->getData();
             $user = $userRepository->findOneBy(['email' => $email]);
 
@@ -145,7 +154,15 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/reset-password/{token}', name: 'reset-password')]
-    public function resetPassword(string $token, Request $request, ResetPasswordRepository $resetPasswordRepository, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher) {
+    public function resetPassword(string $token, Request $request, ResetPasswordRepository $resetPasswordRepository, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, RateLimiterFactory $passwordRecoveryLimiter) {
+
+        $limiter = $passwordRecoveryLimiter->create($request->getClientIp());
+        if(!$limiter->consume(1)->isAccepted()) {
+            $this->addFlash('error', 'Vous devez attendre 1 heure pour refaire une demande');
+
+            return $this->redirectToRoute('signin');
+        }
+
         // verifier que le token est bien dans la base de donnes
         $resetPassword = $resetPasswordRepository->findOneBy(['token' => $token]);
         // verifier qu'il n'a pas exipre
@@ -183,9 +200,10 @@ class SecurityController extends AbstractController
             //on recupere le nouveau mot de passe saisie par l'utilisateur
             $newPassword = $resetPasswordForm->get('password')->getData();
             // on le hash
-            $newHashedPassword = $passwordHasher->hashPassword($user, $newPassword);
+            $hashedNewPassword = $passwordHasher->hashPassword($user, $newPassword);
 
-            $user->setPassword($newHashedPassword);
+            // on modifie le password de l'user
+            $user->setPassword($hashedNewPassword);
 
             //on supprime la demande de reset pasword de la bdd
             $em->remove($resetPassword);
