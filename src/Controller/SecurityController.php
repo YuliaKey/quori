@@ -45,6 +45,17 @@ class SecurityController extends AbstractController
             $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($hashedPassword);
 
+            $picture = $signupForm->get('pictureFile')->getData();
+           if($picture) {
+            $folder = $this->getParameter('profile.folder');
+            $extension = $picture->guessExtension() ?? 'bin';
+            $filename = bin2hex(random_bytes(10)) . "." . $extension; // avatar.png => audyqiwdbhdsa.png
+            $picture->move($folder, $filename);
+            $user->setImage($this->getParameter('profile.folder.public_path'). "/" . $filename); // /profiles/asfouejfwbsdad.png
+           } else {
+            $user->setImage("/images/default-profile.jpeg");
+           }
+
             $em->persist($user);
             $em->flush();
 
