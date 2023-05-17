@@ -18,11 +18,11 @@ C'est un projet en Symfony
 - MySQL
 
 ## Fonctionnalites
-- Creer une question
-- Repondre a une question
-- Voter la pertinence d'une question
-- Voter la pertinence des reponses
-- Recherche de question
-- Creation d'un compte utilisateur
-- Modification du profil et de l'avatar de l'utilisateur
-- Reset Password avec un systeme de token
+- [x] Creer une question
+- [x] Repondre a une question
+- [x] Voter la pertinence d'une question
+- [x] Voter la pertinence des reponses
+- [ ] Recherche de question
+- [x] Creation d'un compte utilisateur
+- [x] Modification du profil et de l'avatar de l'utilisateur
+- [x] Reset Password avec un systeme de token
