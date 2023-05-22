@@ -1,23 +1,42 @@
 header {
     box-shadow: var(--box-shadow);
+
+    .header-logo {
+        max-width: 150px;
+    }
+    
+    .header-logo img {
+        max-width: 150px;
+    }
+    
+    .header-search {
+        max-width: 400px;
+        border-radius: var(--border-radius);
+        background-color: var(--gray-light);
+    
+        @include xs {
+            display: none;
+        }
+    }
+    
+    .header-search input {
+        border: none;
+        outline: none;
+        background-color: var(--gray-light);
+    }
+
+    .burger {
+        font-size: 24px;
+        margin-right: 10px;
+    }
+
 }
 
-.header-logo {
-    max-width: 150px;
-}
+.menu-xs {
+    a {
+        margin: 10px 15px;
+    }
 
-.header-logo img {
-    max-width: 150px;
-}
-
-.header-search {
-    max-width: 400px;
-    border-radius: var(--border-radius);
-    background-color: var(--gray-light);
-}
-
-.header-search input {
-    border: none;
-    outline: none;
-    background-color: var(--gray-light);
+    border-bottom: var(--border);
+    box-shadow: var(--box-shadow);
 }
