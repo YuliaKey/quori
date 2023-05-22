@@ -13,9 +13,31 @@ header {
         max-width: 400px;
         border-radius: var(--border-radius);
         background-color: var(--gray-light);
+        font-size: 16px;
+        height: 30px;
+        position: relative;
     
         @include xs {
             display: none;
+        }
+
+        &-loading {
+            height: 30px
+        }
+
+        &-result {
+            width: 100%;
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0;
+            background-color: red;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 10px;
+
+            a {
+                padding: 10px;
+            }
         }
     }
     
